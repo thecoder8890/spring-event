@@ -29,3 +29,13 @@ Connected to the target VM, address: '127.0.0.1:52716', transport: 'socket'
 2024-06-20T20:25:26.019+05:30  INFO 11924 --- [event] [nio-8080-exec-1] c.o.event.service.DischargeService       : patient discharge process started TestName
 CheckOutHandler : Finalizing bill for patient 12345 : http-nio-8080-exec-1
 2024-06-20T20:25:26.029+05:30  INFO 11924 --- [event] [nio-8080-exec-1] c.o.event.service.DischargeService       : patient discharge process completed TestName
+
+
+### For Testing
+
+`curl --location 'http://localhost:8080/discharge/process' \
+--header 'Content-Type: application/json' \
+--data '{
+"patientId": "12345",
+"patientName": "TestName"
+}'`
