@@ -1,3 +1,7 @@
+article link:- https://onurdesk.com/event-driven-architecture-with-spring-events/
+
+
+
 Logs: 
 
 
