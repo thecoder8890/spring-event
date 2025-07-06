@@ -1,44 +1,90 @@
-article link:- https://onurdesk.com/event-driven-architecture-with-spring-events/
+# Spring Boot Patient Discharge Event Handling Application
 
+## Description
 
+This project is a Spring Boot application that demonstrates event-driven architecture for handling patient discharge processes. When a patient is discharged through the API, a `PatientDischargeEvent` is published. This event is then handled by a listener component (`CheckOutHandler`) which simulates finalizing the patient's bill.
 
-Logs: 
+## Technologies Used
 
+* Java 17
+* Spring Boot 3.3.1
+* Spring Web
+* Spring Events
+* Maven
+* Lombok
 
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
+## Setup and Installation
 
- :: Spring Boot ::                (v3.3.1)
+### Prerequisites
 
-2024-06-20T20:25:07.411+05:30  INFO 11924 --- [event] [  restartedMain] com.onurdesk.event.EventApplication      : Starting EventApplication using Java 17.0.11 with PID 11924 (C:\Projects\Spring\event\target\classes started by Mayur Ingle in C:\Projects\Spring\event)
-2024-06-20T20:25:07.430+05:30  INFO 11924 --- [event] [  restartedMain] com.onurdesk.event.EventApplication      : No active profile set, falling back to 1 default profile: "default"
-2024-06-20T20:25:07.578+05:30  INFO 11924 --- [event] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2024-06-20T20:25:07.579+05:30  INFO 11924 --- [event] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2024-06-20T20:25:09.712+05:30  INFO 11924 --- [event] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2024-06-20T20:25:09.737+05:30  INFO 11924 --- [event] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2024-06-20T20:25:09.738+05:30  INFO 11924 --- [event] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.25]
-2024-06-20T20:25:09.849+05:30  INFO 11924 --- [event] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2024-06-20T20:25:09.852+05:30  INFO 11924 --- [event] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2270 ms
-2024-06-20T20:25:10.591+05:30  INFO 11924 --- [event] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2024-06-20T20:25:10.696+05:30  INFO 11924 --- [event] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2024-06-20T20:25:10.732+05:30  INFO 11924 --- [event] [  restartedMain] com.onurdesk.event.EventApplication      : Started EventApplication in 4.079 seconds (process running for 5.124)
-2024-06-20T20:25:25.814+05:30  INFO 11924 --- [event] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2024-06-20T20:25:25.814+05:30  INFO 11924 --- [event] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2024-06-20T20:25:25.816+05:30  INFO 11924 --- [event] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2024-06-20T20:25:26.019+05:30  INFO 11924 --- [event] [nio-8080-exec-1] c.o.event.service.DischargeService       : patient discharge process started TestName
-CheckOutHandler : Finalizing bill for patient 12345 : http-nio-8080-exec-1
-2024-06-20T20:25:26.029+05:30  INFO 11924 --- [event] [nio-8080-exec-1] c.o.event.service.DischargeService       : patient discharge process completed TestName
+* Java Development Kit (JDK) 17 or later
+* Apache Maven
 
+### Building and Running the Application
 
-### For Testing
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd event
+    ```
+2.  **Build the project using Maven:**
+    ```bash
+    ./mvnw clean install
+    ```
+3.  **Run the application:**
+    ```bash
+    java -jar target/event-0.0.1-SNAPSHOT.jar
+    ```
+    The application will start on the default port `8080`.
 
-`curl --location 'http://localhost:8080/discharge/process' \
---header 'Content-Type: application/json' \
---data '{
-"patientId": "12345",
-"patientName": "TestName"
-}'`
+## API Endpoints
+
+### Discharge Patient
+
+*   **HTTP Method:** `POST`
+*   **URL Path:** `/discharge/process`
+*   **Request Body Format:** JSON
+    ```json
+    {
+        "patientId": "123",
+        "patientName": "John Doe"
+    }
+    ```
+*   **Example Request (using curl):**
+    ```bash
+    curl -X POST \
+      http://localhost:8080/discharge/process \
+      -H 'Content-Type: application/json' \
+      -d '{
+            "patientId": "123",
+            "patientName": "John Doe"
+          }'
+    ```
+*   **Example Response:**
+    ```
+    Patient John Doe with ID 123 discharged successfully!
+    ```
+
+## Event Handling
+
+The application utilizes Spring's ApplicationEventPublisher/EventListener mechanism for handling events.
+
+1.  **Event Publishing:**
+    *   The `DischargeService` is responsible for publishing a `PatientDischargeEvent` when a patient discharge request is processed.
+    *   It uses `ApplicationEventPublisher.publishEvent()` to send the event.
+
+2.  **Event Listening:**
+    *   The `CheckOutHandler` component listens for `PatientDischargeEvent`s using the `@EventListener` annotation on its `processBill` method.
+    *   When a `PatientDischargeEvent` is published, the `processBill` method is automatically invoked.
+    *   In this example, the handler simulates finalizing the bill by printing a message to the console, including the patient's ID and the name of the thread processing the event.
+
+    ```java
+    // Inside CheckOutHandler.java
+    @EventListener
+    public void processBill(PatientDischargeEvent patientDischargeEvent) {
+        System.out.println("CheckOutHandler : Finalizing bill for patient "
+                + patientDischargeEvent.getPatientId() + " : " + Thread.currentThread().getName());
+    }
+    ```
+
+This event-driven approach decouples the discharge process from subsequent actions like billing, making the system more modular and extensible.
